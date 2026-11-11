@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ComeBack</title>
+<style>
+:root{--bg:#EDF3F5;--surf:#fff;--ink:#12252C;--mute:#546A72;--line:#CFDDE2;--acc:#17717B;--acc-ink:#fff;--sun:#E8A02D;--sos:#B4412F;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1B20;--surf:#172A31;--ink:#E7F0F2;--mute:#97ADB5;--line:#2A424B;--acc:#4DB8C4;--acc-ink:#08181C;--sun:#F0B450;--sos:#E57966;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1B20;--surf:#172A31;--ink:#E7F0F2;--mute:#97ADB5;--line:#2A424B;--acc:#4DB8C4;--acc-ink:#08181C;--sun:#F0B450;--sos:#E57966;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:480px;margin:0 auto;padding:18px 18px 40px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:700;line-height:1.2;margin:0}
+h1{font-size:26px}h2{font-size:20px;margin-bottom:8px}
+p{margin:0 0 12px}.mute{color:var(--mute);font-size:14px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{font-family:Georgia,serif;font-weight:700;font-size:22px}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--line);background:var(--surf);color:var(--ink);padding:10px 14px;min-height:44px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600}
+.sos{background:var(--sos);color:#fff;border-color:var(--sos);font-weight:700}
+.full{width:100%}
+.lang button{padding:6px 10px;min-height:36px;font-size:14px}
+.lang button.on{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.hero{text-align:center;padding:22px 16px}
+.days{font-family:Georgia,serif;font-size:76px;line-height:1;font-weight:700;color:var(--acc)}
+input[type=text],textarea{width:100%;font:inherit;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+.chip{border-radius:999px;padding:8px 14px;min-height:40px}
+.chip.on{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+label.row{display:flex;gap:10px;align-items:flex-start;margin:10px 0}
+label.row input{margin-top:5px;width:20px;height:20px}
+nav{display:flex;gap:8px;margin-bottom:14px}nav button{flex:1}
+nav button.on{border-color:var(--acc);box-shadow:inset 0 -3px 0 var(--acc)}
+.hab{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.hab:first-of-type{border-top:0}
+.hab b{display:block}
+.bar{height:10px;border-radius:6px;background:var(--bg);overflow:hidden;margin:4px 0 10px}
+.bar i{display:block;height:100%;background:var(--sun)}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 18px calc(30px + env(safe-area-inset-bottom,0px))}
+.ov>div{max-width:480px;margin:0 auto}
+.timer{font-family:Georgia,serif;font-size:64px;text-align:center;color:var(--sos);margin:8px 0}
+ul.st{padding-left:20px;margin:0 0 14px}ul.st li{margin-bottom:8px}
+.note{border-left:4px solid var(--sun);padding:4px 12px;margin:12px 0;font-size:14px;color:var(--mute)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const T={
+en:{tag:"Start again, as many times as it takes.",nick:"Choose a nickname",nickh:"Not your real name. Nothing here asks for personal details.",what:"What do you want to change?",
+age:"I am 18 or older.",disc:"I understand ComeBack is self-help, not medical treatment or therapy.",go:"Start",
+habs:{social:"Social media",porn:"Porn",mast:"Compulsive masturbation",sex:"Casual or risky sex"},
+home:"Today",check:"Check-in",ins:"Insights",set:"Settings",d:"days free",best:"Best",slip:"I slipped. Start again",
+slipmsg:"A slip is data, not failure. Your best streak is kept. Write what led to it in your next check-in.",
+sosb:"I feel an urge. Help now",sost:"Ride out the urge",sosx:"Urges usually peak and fade within 15 to 30 minutes. You do not have to fight it, only wait it out.",
+steps:["Leave the room or place you are in.","Drink a glass of water.","Do 20 squats or walk fast for 5 minutes.","Message or call someone you trust.","Say: “If urge, then I do something else for 15 minutes.”"],
+crisis:"If you feel unsafe or think about harming yourself, contact emergency services or a crisis line now. Rwanda: 114. Elsewhere, search for your country’s crisis line.",
+close:"Close",how:"How are you feeling?",moods:["Low","Okay","Good"],trig:"What made it harder today?",
+trigs:{lonely:"Loneliness",bored:"Boredom",stress:"Stress",tired:"Tiredness",night:"Alone at night",phone:"Phone in bed",other:"Something else"},
+note:"Anything you want to write down (optional)",save:"Save check-in",saved:"Saved. Well done for showing up.",
+top:"Your most common triggers",none:"No check-ins yet. Do one to see patterns.",tip:"Plan ahead: pick your top trigger and write one “if… then…” action for it.",
+wipe:"Delete all my data",wipeq:"Delete everything on this device? This cannot be undone.",
+store:"Your data stays only on this device (this is a prototype, so there are no accounts or servers yet).",
+alone:"Heavy use of alcohol or drugs? Stopping suddenly can be dangerous. Speak to a doctor.",gr:"Hello",nocheck:"Pick at least one thing to change."},
+rw:{tag:"Tangira bundi bushya, inshuro zose zikenewe.",nick:"Hitamo izina ry’irihimbano",nickh:"Si izina ryawe nyakuri. Nta makuru bwite dusaba.",what:"Ni iki ushaka guhindura?",
+age:"Mfite imyaka 18 cyangwa irenga.",disc:"Ndumva ko ComeBack ari ubufasha bwo kwifasha, si ubuvuzi.",go:"Tangira",
+habs:{social:"Imbuga nkoranyambaga",porn:"Porunogarafiya",mast:"Kwikinisha bikabije",sex:"Ubusambanyi"},
+home:"Uyu munsi",check:"Ikibazo cya buri munsi",ins:"Imiterere",set:"Igenamiterere",d:"iminsi utarasubira inyuma",best:"Myinshi",slip:"Nasubiye inyuma. Tangira bundi bushya",
+slipmsg:"Gusubira inyuma si ugutsindwa, ni isomo. Iminsi myinshi wageze ho irabitswe. Andika icyabiteye mu kibazo gikurikira.",
+sosb:"Numva nshaka kubikora. Mfasha ubu",sost:"Tegereza icyifuzo gishire",sosx:"Icyifuzo gikunze kugera hejuru hanyuma kigashira mu minota 15 kugeza kuri 30. Ntukeneye kukirwanya, ugitegereze gusa.",
+steps:["Va aho uri cyangwa uhindure ahantu.","Nywa ikirahuri cy’amazi.","Kora siporo: gutembera vuba iminota 5 cyangwa kwikubita hasi inshuro 20.","Hamagara cyangwa wandikire umuntu wizeye.","Vuga uti: “Nimbona icyifuzo, nzakora ikindi mu minota 15.”"],
+crisis:"Niba wumva udatekanye cyangwa utekereza kwikomeretsa, hamagara ubutabazi cyangwa umujyanama ako kanya. U Rwanda: 114. Ahandi, shakisha numero y’ubutabazi y’igihugu cyawe.",
+close:"Funga",how:"Wiyumva ute?",moods:["Nabi","Ni byiza kuri gato","Neza"],trig:"Ni iki cyakugoye uyu munsi?",
+trigs:{lonely:"Irungu",bored:"Kurambirwa",stress:"Stress",tired:"Umunaniro",night:"Ndi jyenyine nijoro",phone:"Telefone ku buriri",other:"Ikindi"},
+note:"Icyo ushaka kwandika (si itegeko)",save:"Bika",saved:"Byabitswe. Warakoze kugaruka.",
+top:"Ibikugora kenshi",none:"Nta kibazo urasubiza. Subiza kimwe urebe imiterere.",tip:"Itegure: hitamo icyo ugirwaho ingaruka cyane, wandike gahunda imwe ya “nimbona… nzakora…”.",
+wipe:"Siba amakuru yanjye yose",wipeq:"Gusiba byose kuri iyi telefone? Ntibisubirwaho.",
+store:"Amakuru yawe abikwa kuri iyi telefone gusa (iyi ni verisiyo y’ibanze, nta konti cyangwa seriveri biraboneka).",
+alone:"Ukoresha inzoga cyangwa ibiyobyabwenge byinshi? Kubireka bitunguranye bishobora guteza akaga. Ganira na muganga.",gr:"Muraho",nocheck:"Hitamo nibura ikintu kimwe."}
+};
+const KEY="comeback.v1";
+let S=load(),tab="home",L=(S&&S.lang)||"rw",draft={habs:[],mood:1,trig:[],note:"",msg:""},timer=null;
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const t=()=>T[L];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const days=h=>Math.max(0,Math.floor((Date.now()-h.start)/864e5));
+const bestOf=h=>Math.max(h.best||0,days(h));
+function lang(l){L=l;if(S){S.lang=l;save()}render()}
+function langBar(){return `<div class="lang"><button class="${L=="rw"?"on":""}" onclick="lang('rw')">RW</button> <button class="${L=="en"?"on":""}" onclick="lang('en')">EN</button></div>`}
+function head(){return `<header><span class="logo">ComeBack</span>${langBar()}</header>`}
+function render(){document.documentElement.lang=L;const a=document.getElementById("app");a.innerHTML=head()+(S&&S.nick?(tab=="home"?home():tab=="check"?check():tab=="ins"?ins():sets()):onb())}
+function onb(){const x=t();return `<h1>${x.tag}</h1><p class="mute" style="margin-top:8px">${x.nickh}</p>
+<div class="card"><h2>${x.nick}</h2><input type="text" id="nick" maxlength="24" autocomplete="off" value="${esc(draft.nick||"")}" oninput="draft.nick=this.value">
+<h2 style="margin-top:16px">${x.what}</h2><div class="chips">${Object.keys(x.habs).map(k=>`<button class="chip ${draft.habs.includes(k)?"on":""}" onclick="tg('${k}')">${x.habs[k]}</button>`).join("")}</div>
+<label class="row"><input type="checkbox" id="a1" ${draft.a1?"checked":""} onchange="draft.a1=this.checked"><span>${x.age}</span></label>
+<label class="row"><input type="checkbox" id="a2" ${draft.a2?"checked":""} onchange="draft.a2=this.checked"><span>${x.disc}</span></label>
+<p class="mute" style="color:var(--sos)">${esc(draft.err||"")}</p>
+<button class="pri full" onclick="start()">${x.go}</button></div><p class="note">${x.alone}</p>`}
+function tg(k){const i=draft.habs.indexOf(k);i<0?draft.habs.push(k):draft.habs.splice(i,1);render()}
+function start(){const x=t();if(!draft.nick||!draft.nick.trim()||!draft.a1||!draft.a2){draft.err=x.disc;if(!draft.a1)draft.err=x.age;if(!draft.nick||!draft.nick.trim())draft.err=x.nick;render();return}
+if(!draft.habs.length){draft.err=x.nocheck;render();return}
+S={nick:draft.nick.trim(),lang:L,habits:draft.habs.map(id=>({id,start:Date.now(),best:0})),logs:[]};save();draft={habs:[],mood:1,trig:[],note:"",msg:""};render()}
+function navb(){const x=t();return `<nav>${[["home",x.home],["check",x.check],["ins",x.ins],["set",x.set]].map(([k,v])=>`<button class="${tab==k?"on":""}" onclick="tab='${k}';render()">${v}</button>`).join("")}</nav>`}
+function home(){const x=t();return `<p class="mute">${x.gr}, ${esc(S.nick)}</p>${navb()}`+S.habits.map(h=>`<div class="card hero"><div class="mute">${x.habs[h.id]}</div><div class="days">${days(h)}</div><div>${x.d}</div><p class="mute" style="margin-top:6px">${x.best}: ${bestOf(h)}</p><button onclick="slip('${h.id}')" class="full">${x.slip}</button></div>`).join("")+`<button class="sos full" onclick="sos()">${x.sosb}</button><p class="note">${esc(draft.msg||"")}</p>`}
+function slip(id){const h=S.habits.find(z=>z.id==id);h.best=bestOf(h);h.start=Date.now();save();draft.msg=t().slipmsg;render()}
+function check(){const x=t();return navb()+`<div class="card"><h2>${x.how}</h2><div class="chips">${x.moods.map((m,i)=>`<button class="chip ${draft.mood==i?"on":""}" onclick="draft.mood=${i};render()">${m}</button>`).join("")}</div>
+<h2>${x.trig}</h2><div class="chips">${Object.keys(x.trigs).map(k=>`<button class="chip ${draft.trig.includes(k)?"on":""}" onclick="tt('${k}')">${x.trigs[k]}</button>`).join("")}</div>
+<h2>${x.note}</h2><textarea id="nt" oninput="draft.note=this.value">${esc(draft.note)}</textarea><p class="mute" style="color:var(--acc)">${esc(draft.ok||"")}</p>
+<button class="pri full" onclick="saveC()">${x.save}</button></div>`}
+function tt(k){const i=draft.trig.indexOf(k);i<0?draft.trig.push(k):draft.trig.splice(i,1);render()}
+function saveC(){S.logs.push({ts:Date.now(),mood:draft.mood,trig:draft.trig,note:draft.note});save();draft.trig=[];draft.note="";draft.mood=1;draft.ok=t().saved;render();draft.ok=""}
+function ins(){const x=t(),c={};S.logs.forEach(l=>l.trig.forEach(k=>c[k]=(c[k]||0)+1));const ks=Object.keys(c).sort((a,b)=>c[b]-c[a]),mx=c[ks[0]]||1;
+return navb()+`<div class="card"><h2>${x.top}</h2>`+(ks.length?ks.map(k=>`<div>${x.trigs[k]} <span class="mute">(${c[k]})</span></div><div class="bar"><i style="width:${c[k]/mx*100}%"></i></div>`).join("")+`<p class="note">${x.tip}</p>`:`<p class="mute">${x.none}</p>`)+`</div>`}
+function sets(){const x=t();return navb()+`<div class="card"><p>${x.store}</p><p class="note">${x.alone}</p><button class="full" onclick="wipe()">${x.wipe}</button></div>`}
+function wipe(){if(confirm(t().wipeq)){try{localStorage.removeItem(KEY)}catch(e){}S=null;tab="home";render()}}
+function sos(){const x=t();let left=900;const o=document.createElement("div");o.className="ov";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");
+o.innerHTML=`<div><h1>${x.sost}</h1><div class="timer" id="tm">15:00</div><p>${x.sosx}</p><ul class="st">${x.steps.map(s=>`<li>${s}</li>`).join("")}</ul><p class="note">${x.crisis}</p><button class="pri full" id="cl">${x.close}</button></div>`;
+document.body.appendChild(o);const tm=o.querySelector("#tm");const end=()=>{clearInterval(timer);o.remove()};o.querySelector("#cl").onclick=end;o.querySelector("#cl").focus();
+clearInterval(timer);timer=setInterval(()=>{left--;if(left<=0){tm.textContent="0:00";clearInterval(timer);return}tm.textContent=Math.floor(left/60)+":"+String(left%60).padStart(2,"0")},1000)}
+render();
+</script>
+</body>
+</html>
